@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studivance</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <!-- Added Marked.js for Markdown Rendering in Chat -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Google Fonts for Typography Settings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #F5F5DC; /* Soft Beige */
+        color: #1C1C1C; /* Charcoal Black */
+        /* Default Font - will be overridden by ThemeContext */
+        font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        
+        /* Text Clarity Enhancements */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        -webkit-text-size-adjust: 100%;
+      }
+      
+      /* Global Scrollbar Hiding - Scrolling still works */
+      * {
+          scrollbar-width: none !important; /* Firefox */
+          -ms-overflow-style: none !important;  /* IE and Edge */
+      }
+      *::-webkit-scrollbar {
+          display: none !important; /* Chrome, Safari, Opera */
+          width: 0 !important;
+          height: 0 !important;
+      }
+
+      /* Global Input & Text Styles - High Contrast */
+      input, textarea, select {
+          color: #1C1C1C !important; /* Charcoal Black */
+          background-color: #FDFDF6 !important; /* Very light beige/white mix for inputs */
+          border-color: rgba(28, 28, 28, 0.3) !important; /* Increased border visibility */
+      }
+
+      /* Custom Select Dropdown Styling */
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%231C1C1C' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem !important;
+      }
+      
+      /* Date & Time Picker Styling */
+      input[type="date"]::-webkit-calendar-picker-indicator,
+      input[type="time"]::-webkit-calendar-picker-indicator {
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 2.5rem;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+          z-index: 10;
+      }
+      
+      /* Placeholder Styles - Improved Visibility */
+      ::placeholder {
+          color: #555555 !important; /* Darker gray for better visibility */
+          opacity: 1;
+      }
+      
+      /* Dropdown Options */
+      select option {
+          background-color: #FFFFFF !important;
+          color: #1C1C1C !important;
+      }
+
+      /* Global Text Override to ensure pure charcoal */
+      body h1, body h2, body h3, body h4, body h5, body h6, body p, body span, body div, body label, body li, body td, body th, body a {
+          color: #1C1C1C;
+      }
+      
+      /* Specific override for chat user messages to ensure visibility */
+      .chat-user-message, .chat-user-message * {
+          color: #FFFFFF !important;
+      }
+      .chat-user-message a {
+          color: #E5E7EB !important; /* Light Gray for links */
+          text-decoration: underline;
+      }
+
+      /* Buttons */
+      button {
+          color: #1C1C1C;
+      }
+      
+      /* Utility class to force light text (for primary buttons/sidebar) */
+      .text-accent {
+          color: #F5F5DC !important; /* Soft Beige text on dark buttons */
+      }
+      .text-accent span {
+          color: #F5F5DC !important;
+      }
+      
+      /* Explicitly set text-white to pure white to override global dark text */
+      .text-white {
+          color: #FFFFFF !important;
+      }
+      .text-white span {
+          color: #FFFFFF !important;
+      }
+      
+      /* Ensure SVGs inherit color correctly or are set */
+      .text-text-muted {
+          color: #444444 !important; /* Darker for better clarity */
+      }
+      
+      /* Selection Color */
+      ::selection {
+        background-color: #1C1C1C;
+        color: #F5F5DC;
+      }
+      
+      /* Fix for blurry text in transformed elements (Modals, Animations) */
+      .transform {
+        -webkit-font-smoothing: subpixel-antialiased;
+        backface-visibility: hidden; 
+      }
+      
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+              montserrat: ['Montserrat', 'sans-serif'],
+              'space-grotesk': ['"Space Grotesk"', 'sans-serif'],
+              'exo-2': ['"Exo 2"', 'sans-serif'],
+              oswald: ['Oswald', 'sans-serif'],
+              lora: ['Lora', 'serif'],
+              'playfair-display': ['"Playfair Display"', 'serif'],
+              'source-code': ['"Source Code Pro"', 'monospace'],
+              'ibm-plex': ['"IBM Plex Mono"', 'monospace'],
+              lobster: ['Lobster', 'display'],
+              dancing: ['"Dancing Script"', 'cursive'],
+              pacifico: ['Pacifico', 'cursive'],
+            },
+            colors: {
+              primary: {
+                DEFAULT: '#1C1C1C', /* Charcoal Black */
+                '50': '#808080',
+                '100': '#666666',
+                '200': '#4D4D4D',
+                '300': '#333333',
+                '400': '#262626',
+                '500': '#1C1C1C', /* Main */
+                '600': '#171717',
+                '700': '#121212',
+                '800': '#0D0D0D',
+                '900': '#000000',
+                '950': '#000000',
+                'glow': 'rgba(28, 28, 28, 0.3)',
+              },
+              accent: {
+                DEFAULT: '#F5F5DC', /* Soft Beige */
+                light: '#FFFFF0',
+                dark: '#EBEBD0',
+              },
+              background: '#F5F5DC', /* Soft Beige Background */
+              surface: '#FFFFFF',    /* White Cards for Contrast */
+              'surface-inset': '#F0F0E6', /* Darker beige for inputs */
+              'surface-muted': '#EBEBD0',
+              'text-primary': '#1C1C1C',   /* Charcoal Black */
+              'text-secondary': '#222222', /* Darker Gray for clarity */
+              'text-muted': '#444444',     /* Medium Gray */
+              border: 'rgba(28, 28, 28, 0.15)', /* Increased visibility */
+              'border-muted': 'rgba(28, 28, 28, 0.08)',
+            },
+            boxShadow: {
+              'glow-primary': '0 0 20px 0px rgba(28, 28, 28, 0.2)',
+              'glow-primary-light': '0 0 10px 2px rgba(28, 28, 28, 0.1)',
+            },
+            keyframes: {
+                fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+                scaleIn: { '0%': { opacity: 0, transform: 'scale(0.97)' }, '100%': { opacity: 1, transform: 'scale(1)' } },
+                slideUp: { '0%': { opacity: 0, transform: 'translateY(10px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+                float: {
+                  '0%, 100%': { transform: 'translateY(0)' },
+                  '50%': { transform: 'translateY(-5px)' },
+                },
+            },
+            animation: {
+                'fade-in': 'fadeIn 0.4s ease-in-out forwards',
+                'scale-in': 'scaleIn 0.3s ease-in-out forwards',
+                'slide-up': 'slideUp 0.4s ease-in-out forwards',
+                'float': 'float 3s ease-in-out infinite',
+            }
+          },
+        },
+      }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/heroicons/2.1.3/24/outline/heroicons.min.css" integrity="sha512-Vb160lDnw_L2RaoftAwgH/tGgGzCoj2USBGR1UPjAb0eeNAi9cLw5+ELh27kZfO3uL9i6K2fNlD0pThL3TuaPg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.8.2",
+    "@heroicons/react/": "https://aistudiocdn.com/@heroicons/react@^2.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.1.2",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^0.12.0",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.1.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
